@@ -1,0 +1,28 @@
+{
+  "name": "wetube",
+  "version": "1.0.0",
+  "description": "Youtube clone built using NodeJS, Express, Mongo and ES6",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakuun76/wetube.git"
+  },
+  "author": "rakuun76",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rakuun76/wetube/issues"
+  },
+  "homepage": "https://github.com/rakuun76/wetube#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.23.2",
+    "nodemon": "^3.0.1"
+  }
+}

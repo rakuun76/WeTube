@@ -1,6 +1,26 @@
-export const home = (req, res) => {
-  res.send("home");
-};
+const videos = [
+  {
+    title: "First",
+    user: "rakuun76",
+    views: 76,
+    createdAt: "7 minutes ago",
+  },
+  {
+    title: "Second",
+    user: "rakuun76",
+    views: 67,
+    createdAt: "7 hours ago",
+  },
+  {
+    title: "Third",
+    user: "frog_tongue_169mm",
+    views: 169,
+    createdAt: "7 days ago",
+  },
+];
+
+export const home = (req, res) =>
+  res.render("home", { pageTitle: "Home", videos });
 
 export const search = (req, res) => {
   res.send("search");

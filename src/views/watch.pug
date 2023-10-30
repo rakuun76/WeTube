@@ -1,0 +1,8 @@
+extends base
+
+block content
+    ul
+        li=video.user
+        li #{video.views} #{(video.views === 1) ? "view" : "views"}
+        li=video.createdAt
+    a(href=`${video.id}/edit`) Edit video &rarr;

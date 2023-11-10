@@ -1,8 +1,13 @@
 extends base
 
 block content
-    ul
-        li=video.user
-        li #{video.views} #{(video.views === 1) ? "view" : "views"}
-        li=video.createdAt
-    a(href=`${video.id}/edit`) Edit video &rarr;
+    p=video.description
+    small=video.createdAt
+    br
+    small #{video.meta.views} #{(video.meta.views <= 1) ? "view" : "views"}
+    br
+    small #{video.meta.rating} / 5
+    br
+    small #{video.hashtags.map(e => "#" + e).join(" ")}
+    br
+    a(href=`${video._id}/edit`) Edit video &rarr;

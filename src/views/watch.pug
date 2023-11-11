@@ -8,6 +8,6 @@ block content
     br
     small #{video.meta.rating} / 5
     br
-    small #{video.hashtags.map(e => "#" + e).join(" ")}
+    small #{video.hashtags.join(" ")}
     br
     a(href=`${video._id}/edit`) Edit video &rarr;

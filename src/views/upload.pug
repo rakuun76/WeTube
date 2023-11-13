@@ -5,9 +5,9 @@ block content
         p=errorMessage
     form(method="POST")
         label(for="title") Title
-        input(type="text" id="title" name="title" required maxlength=50)
+        input(id="title" name="title" type="text" required maxlength=50)
         label(for="description") Description
-        input(type="text" id="description" name="description" required maxlength=100)
+        input(id="description" name="description" type="text" required maxlength=100)
         label(for="hashtags") Hashtags
-        input(type="text" id="hashtags" name="hashtags" placeholder="Separate by comma")
+        input(id="hashtags" name="hashtags" type="text" placeholder="Separate by comma")
         input(type="submit" value="Upload")

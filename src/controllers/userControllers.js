@@ -49,3 +49,69 @@ export const postLogin = async (req, res) => {
   req.session.user = user;
   return res.redirect("/");
 };
+
+export const startGithubLogin = (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/authorize";
+  const config = {
+    client_id: process.env.CLIENT_ID,
+    scope: "read:user user:email",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishGithubLogin = async (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/access_token";
+  const config = {
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+
+  const tokenRes = await fetch(finalUrl, {
+    method: "POST",
+    headers: { Accept: "application/json" },
+  });
+  const tokenData = await tokenRes.json();
+
+  if ("access_token" in tokenData) {
+    const { access_token } = tokenData;
+    const apiUrl = "https://api.github.com";
+
+    const userRes = await fetch(`${apiUrl}/user`, {
+      headers: { Authorization: `token ${access_token}` },
+    });
+    const userData = await userRes.json();
+
+    const emailRes = await fetch(`${apiUrl}/user/emails`, {
+      headers: { Authorization: `token ${access_token}` },
+    });
+    const emailData = await emailRes.json();
+    const validEmail = emailData.find(
+      (email) => email.primary === true && email.verified === true
+    );
+    if (!validEmail) {
+      return res.redirect("/login");
+    }
+
+    const existingUser = await User.findOne({ email: validEmail.email });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+    } else {
+      const user = await User.create({
+        name: userData.login,
+        email: validEmail.email,
+        socialOnly: true,
+      });
+      req.session.loggedIn = true;
+      req.session.user = user;
+    }
+    return res.redirect("/");
+  } else {
+    return res.redirect("/login");
+  }
+};

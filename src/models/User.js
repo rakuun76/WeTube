@@ -5,17 +5,24 @@ const userSchema = mongoose.Schema({
   name: { type: String, required: true, unique: true },
   avatarUrl: String,
   email: { type: String, required: true, unique: true },
-  socialOnly: { type: Boolean, default: false },
+  OAuthOnly: { type: Boolean, default: false },
   password: {
     type: String,
     required: function () {
-      return !this.socialOnly;
+      return !this.OAuthOnly;
     },
   },
 });
 
+/**
+ * OAuth로 user가 생성되는 경우,
+ * this.password가 undefined여서 오류가 발생
+ * 이를 방지하기 위해 if문 사용
+ */
 userSchema.pre("save", async function () {
-  if (this.password) this.password = await bcrypt.hash(this.password, 5);
+  if (this.password) {
+    this.password = await bcrypt.hash(this.password, 5);
+  }
 });
 
 const User = mongoose.model("User", userSchema);

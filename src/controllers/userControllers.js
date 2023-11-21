@@ -2,14 +2,17 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+
 export const postJoin = async (req, res) => {
-  const { name, email, password, confirm } = req.body;
-  if (password !== confirm) {
+  const { name, email, password, pwConfirm } = req.body;
+
+  if (password !== pwConfirm) {
     return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "Password confirmation does not match",
     });
   }
+
   const already = await User.exists({ $or: [{ name }, { email }] });
   if (already) {
     return res.status(400).render("join", {
@@ -17,8 +20,10 @@ export const postJoin = async (req, res) => {
       errorMessage: "This name/email is already taken.",
     });
   }
+
+  //Mongoose Schema로 인해 생기는 error catch
   try {
-    await User.create({ name, email, password, confirm });
+    await User.create({ name, email, password, pwConfirm });
     return res.redirect("login");
   } catch (error) {
     return res
@@ -26,18 +31,21 @@ export const postJoin = async (req, res) => {
       .render("join", { pageTitle: "Join", errorMessage: error._message });
   }
 };
+
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email, socialOnly: false });
+  const user = await User.findOne({ email, OAuthOnly: false });
+
   if (!user) {
     return res.status(400).render("login", {
       pageTitle: "Login",
       errorMessage: "An account with this email does not exist.",
     });
   }
+
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
     return res.status(400).render("login", {
@@ -45,6 +53,7 @@ export const postLogin = async (req, res) => {
       errorMessage: "Wrong password.",
     });
   }
+
   req.session.loggedIn = true;
   req.session.user = user;
   return res.redirect("/");
@@ -90,6 +99,8 @@ export const finishGithubLogin = async (req, res) => {
       headers: { Authorization: `token ${access_token}` },
     });
     const emailData = await emailRes.json();
+
+    //login에 사용할 수 있는 email 추출
     const validEmail = emailData.find(
       (email) => email.primary === true && email.verified === true
     );
@@ -103,13 +114,15 @@ export const finishGithubLogin = async (req, res) => {
         name: userData.login,
         avatarUrl: userData.avatar_url,
         email: validEmail.email,
-        socialOnly: true,
+        OAuthOnly: true,
       });
     }
+
     req.session.loggedIn = true;
     req.session.user = user;
     return res.redirect("/");
   } else {
+    //access_token이 없는 경우
     return res.redirect("/login");
   }
 };

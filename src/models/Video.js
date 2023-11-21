@@ -11,6 +11,7 @@ const videoSchema = mongoose.Schema({
   },
 });
 
+//hashtags keyword split -> "#keyword" mapping
 videoSchema.static("formatHashtags", (hashtags) =>
   hashtags.split(/\s*,\s*/).map((e) => (e.startsWith("#") ? e : `#${e}`))
 );

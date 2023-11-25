@@ -56,6 +56,7 @@ export const postLogin = async (req, res) => {
 
   req.session.loggedIn = true;
   req.session.user = user;
+
   return res.redirect("/");
 };
 
@@ -67,6 +68,7 @@ export const startGithubLogin = (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
+
   return res.redirect(finalUrl);
 };
 
@@ -105,7 +107,7 @@ export const finishGithubLogin = async (req, res) => {
       (email) => email.primary === true && email.verified === true
     );
     if (!validEmail) {
-      return res.redirect("/login");
+      return res.redirect("/users/login");
     }
 
     let user = await User.findOne({ email: validEmail.email });
@@ -120,14 +122,61 @@ export const finishGithubLogin = async (req, res) => {
 
     req.session.loggedIn = true;
     req.session.user = user;
+
     return res.redirect("/");
   } else {
     //access_token이 없는 경우
-    return res.redirect("/login");
+    return res.redirect("/users/login");
   }
 };
 
 export const logout = (req, res) => {
   req.session.destroy();
+
   return res.redirect("/");
+};
+
+export const profile = (req, res) => {
+  const { name } = req.session.user;
+
+  return res.render("profile", { pageTitle: `${name}'s Profile` });
+};
+
+export const getEdit = (req, res) => {
+  return res.render("edit-user", { pageTitle: "Edit profile" });
+};
+
+export const postEdit = async (req, res) => {
+  const {
+    body: { name, email },
+    session: {
+      user: { _id, avatarUrl },
+    },
+    file,
+  } = req;
+
+  //변경된 name, email 존재 여부 확인
+  const nameExists = await User.exists({ _id: { $ne: _id }, name });
+  if (nameExists) {
+    return res.status(400).render("edit-user", {
+      pageTitle: "Edit profile",
+      errorMessage: "The name already exists",
+    });
+  }
+  const emailExists = await User.exists({ _id: { $ne: _id }, email });
+  if (emailExists) {
+    return res.status(400).render("edit-user", {
+      pageTitle: "Edit profile",
+      errorMessage: "The email already exists",
+    });
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { avatarUrl: file ? file.path : avatarUrl, name, email },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+
+  return res.redirect(`/users/${_id}`);
 };

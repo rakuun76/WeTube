@@ -1,0 +1,10 @@
+extends base
+
+block content
+    img(src=`/${user.avatarUrl}` width=100 height=100)
+    h4 Name
+    span=user.name
+    h4 Email
+    span=user.email
+    hr
+    a(href=`${user._id}/edit`) Edit profile &rarr;

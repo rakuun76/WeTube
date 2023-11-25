@@ -12,18 +12,18 @@ html(lang="en")
                         a(href="/") Home
                     li
                         a(href="/search") Search
-                    li
-                        a(href="/videos/upload") Upload
                     if loggedIn
                         li
-                            a(href="/users/logout") Logout
+                            a(href=`/users/${user._id}`) #{user.name}'s Profile
                         li
-                            a(href="/profile") #{user.name}의 Profile
+                            a(href="/videos/upload") Upload
+                        li
+                            a(href="/users/logout") Logout
                     else
                         li
-                            a(href="/join") Join
+                            a(href="/users/join") Join
                         li
-                            a(href="/login") Login
+                            a(href="/users/login") Login
         main
             block content
         include partials/footer

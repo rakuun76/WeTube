@@ -220,6 +220,26 @@ export const getCreatePW = (req, res) => {
   return res.render("create-pw", { pageTitle: "Create password" });
 };
 
-export const postCreatePW = (req, res) => {
-  return res.send("create");
+export const postCreatePW = async (req, res) => {
+  const {
+    body: { password, pwConfirm },
+    session: {
+      user: { _id },
+    },
+  } = req;
+
+  if (password !== pwConfirm) {
+    return res.status(400).render("create-pw", {
+      pageTitle: "Create password",
+      errorMessage: "Password confirmation does not match",
+    });
+  }
+
+  const user = await User.findById(_id);
+  user.OAuthOnly = false;
+  user.password = password;
+  await user.save();
+  req.session.user = user;
+
+  return res.redirect(`/users/${_id}`);
 };

@@ -180,3 +180,46 @@ export const postEdit = async (req, res) => {
 
   return res.redirect(`/users/${_id}`);
 };
+
+export const getChangePW = (req, res) => {
+  return res.render("change-pw", { pageTitle: "Change password" });
+};
+
+export const postChangePW = async (req, res) => {
+  const {
+    body: { oldPW, newPW, newPWConfirm },
+    session: {
+      user: { _id },
+    },
+  } = req;
+
+  const user = await User.findById(_id);
+
+  const match = await bcrypt.compare(oldPW, user.password);
+  if (!match) {
+    return res.status(400).render("change-pw", {
+      pageTitle: "Change password",
+      errorMessage: "The current password is incorrect",
+    });
+  }
+
+  if (newPW !== newPWConfirm) {
+    return res.status(400).render("change-pw", {
+      pageTitle: "Change password",
+      errorMessage: "Password confirmation does not match",
+    });
+  }
+
+  user.password = newPW;
+  await user.save();
+
+  return res.redirect("/users/logout");
+};
+
+export const getCreatePW = (req, res) => {
+  return res.render("create-pw", { pageTitle: "Create password" });
+};
+
+export const postCreatePW = (req, res) => {
+  return res.send("create");
+};

@@ -10,6 +10,10 @@ import {
   profile,
   getEdit,
   postEdit,
+  getChangePW,
+  postChangePW,
+  getCreatePW,
+  postCreatePW,
 } from "../controllers/userControllers";
 import multer from "multer";
 
@@ -26,5 +30,13 @@ userRouter
   .route("/:id([0-9a-f]{24})/edit")
   .get(getEdit)
   .post(upload.single("avatar"), postEdit);
+userRouter
+  .route("/:id([0-9a-f]{24})/change-pw")
+  .get(getChangePW)
+  .post(postChangePW);
+userRouter
+  .route("/:id([0-9a-f]{24})/create-pw")
+  .get(getCreatePW)
+  .post(postCreatePW);
 
 export default userRouter;

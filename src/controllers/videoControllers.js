@@ -38,8 +38,9 @@ export const postEdit = async (req, res) => {
   return res.redirect(`/videos/${id}`);
 };
 
-export const getUpload = (req, res) =>
-  res.render("upload", { pageTitle: "Upload" });
+export const getUpload = (req, res) => {
+  return res.render("upload", { pageTitle: "Upload" });
+};
 
 export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;

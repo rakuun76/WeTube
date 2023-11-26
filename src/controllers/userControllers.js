@@ -1,7 +1,9 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 
-export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+export const getJoin = (req, res) => {
+  return res.render("join", { pageTitle: "Join" });
+};
 
 export const postJoin = async (req, res) => {
   const { name, email, password, pwConfirm } = req.body;
@@ -32,8 +34,9 @@ export const postJoin = async (req, res) => {
   }
 };
 
-export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
+export const getLogin = (req, res) => {
+  return res.render("login", { pageTitle: "Login" });
+};
 
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;

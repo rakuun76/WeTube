@@ -5,6 +5,28 @@ export const home = async (req, res) => {
   return res.render("home", { pageTitle: "Home", videos });
 };
 
+export const getUpload = (req, res) => {
+  return res.render("upload", { pageTitle: "Upload" });
+};
+
+export const postUpload = async (req, res) => {
+  const { title, description, hashtags } = req.body;
+  try {
+    await Video.create({
+      title,
+      description,
+      hashtags: Video.formatHashtags(hashtags),
+    });
+    const [video] = await Video.find({ title, description });
+    return res.redirect(`${video._id}`);
+  } catch (error) {
+    return res.status(400).render("upload", {
+      pageTitle: "Upload",
+      errorMessage: error._message,
+    });
+  }
+};
+
 export const watch = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
@@ -36,28 +58,6 @@ export const postEdit = async (req, res) => {
     hashtags: Video.formatHashtags(hashtags),
   });
   return res.redirect(`/videos/${id}`);
-};
-
-export const getUpload = (req, res) => {
-  return res.render("upload", { pageTitle: "Upload" });
-};
-
-export const postUpload = async (req, res) => {
-  const { title, description, hashtags } = req.body;
-  try {
-    await Video.create({
-      title,
-      description,
-      hashtags: Video.formatHashtags(hashtags),
-    });
-    const [video] = await Video.find({ title, description });
-    return res.redirect(`${video._id}`);
-  } catch (error) {
-    return res.status(400).render("upload", {
-      pageTitle: "Upload",
-      errorMessage: error._message,
-    });
-  }
 };
 
 export const deleteVideo = async (req, res) => {

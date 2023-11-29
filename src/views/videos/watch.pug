@@ -1,15 +1,17 @@
 extends ../base
 
 block content
-    p=video.description
-    small=video.createdAt
-    br
-    small #{video.meta.views} #{(video.meta.views <= 1) ? "view" : "views"}
-    br
-    small #{video.meta.rating} / 5
-    br
-    small #{video.hashtags.join(" ")}
-    br
-    a(href=`${video._id}/edit`) Edit video &rarr;
-    br
-    a(href=`${video._id}/delete`) Delete video &rarr;
+    video(src=`/${video.fileUrl}` controls)
+    div(style="display: flex;")
+        img(src=`/${video.owner.avatarUrl}` width=30 height=30)
+        a(href=`/users/${video.owner._id}`)=video.owner.name
+    div
+        small #{video.meta.views}#{(video.meta.views <= 1) ? "view" : "views"} 
+        small #{video.createdAt}
+        div #{video.hashtags.join(" ")}
+        p=video.description
+    if video.owner._id == user._id
+        hr
+        a(href=`${video._id}/edit`) Edit video &rarr;
+        br
+        a(href=`${video._id}/delete`) Delete video &rarr;

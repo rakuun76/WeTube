@@ -1,5 +1,5 @@
 extends base
-include mixins/video
+include mixins/videoInfo
 
 block content
     form
@@ -9,3 +9,5 @@ block content
     div
         each video in videos
             +videoInfo(video)
+        else
+            span There is no video 😥

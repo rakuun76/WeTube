@@ -3,7 +3,9 @@ extends ../base
 block content
     if errorMessage
         h4=errorMessage
-    form(method="POST")
+    form(method="POST" enctype="multipart/form-data")
+        label(for="video") Video
+        input(id="video" name="video" type="file" required accept="video/*")
         label(for="title") Title
         input(id="title" name="title" type="text" required maxlength=50)
         label(for="description") Description

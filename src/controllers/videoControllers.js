@@ -1,4 +1,5 @@
 import Video from "../models/Video";
+import User from "../models/User";
 
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort("-createdAt");
@@ -10,14 +11,27 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
-  const { title, description, hashtags } = req.body;
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { title, description, hashtags },
+    file: { path },
+  } = req;
+
   try {
-    await Video.create({
+    const video = await Video.create({
+      fileUrl: path,
       title,
+      owner: _id,
       description,
       hashtags: Video.formatHashtags(hashtags),
     });
-    const [video] = await Video.find({ title, description });
+
+    const user = await User.findById(_id);
+    user.videos.push(video._id);
+    await user.save();
+
     return res.redirect(`${video._id}`);
   } catch (error) {
     return res.status(400).render("videos/upload", {
@@ -29,7 +43,7 @@ export const postUpload = async (req, res) => {
 
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id);
+  const video = await Video.findById(id).populate("owner");
   if (!video) {
     return res
       .status(404)
@@ -65,7 +79,15 @@ export const postEdit = async (req, res) => {
 
 export const deleteVideo = async (req, res) => {
   const { id } = req.params;
-  await Video.findByIdAndDelete(id);
+
+  const deletedVideo = await Video.findByIdAndDelete(id);
+
+  const owner = await User.findById(deletedVideo.owner);
+  owner.videos = owner.videos.filter(
+    (id) => String(id) !== String(deletedVideo._id)
+  );
+  await owner.save();
+
   return res.redirect("/");
 };
 

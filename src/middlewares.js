@@ -1,7 +1,7 @@
 export const setLocals = (req, res, next) => {
   res.locals.siteName = "WeTube";
   res.locals.loggedIn = Boolean(req.session.loggedIn);
-  res.locals.user = req.session.user;
+  res.locals.user = req.session.user || {};
   next();
 };
 
@@ -17,7 +17,7 @@ export const loginOnly = (req, res, next) => {
   if (req.session.loggedIn) {
     return next();
   } else {
-    return res.render("login", {
+    return res.render("users/login", {
       pageTitle: "Login",
       errorMessage: "Login first",
     });
@@ -45,3 +45,5 @@ export const passwordOnly = (req, res, next) => {
     return res.redirect(`/users/${_id}`);
   }
 };
+
+//ownerOnly

@@ -8,10 +8,21 @@ import {
   deleteVideo,
 } from "../controllers/videoControllers";
 import { loginOnly } from "../middlewares";
+import multer from "multer";
 
 const videoRouter = express.Router();
+const upload = multer({
+  dest: "uploads/videos/",
+  limits: {
+    fileSize: 10000000,
+  },
+});
 
-videoRouter.route("/upload").all(loginOnly).get(getUpload).post(postUpload);
+videoRouter
+  .route("/upload")
+  .all(loginOnly)
+  .get(getUpload)
+  .post(upload.single("video"), postUpload);
 videoRouter.get("/:id([0-9a-f]{24})", watch);
 videoRouter
   .route("/:id([0-9a-f]{24})/edit")

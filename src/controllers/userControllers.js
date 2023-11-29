@@ -140,10 +140,17 @@ export const logout = (req, res) => {
   return res.redirect("/");
 };
 
-export const profile = (req, res) => {
-  const { name } = req.session.user;
+export const profile = async (req, res) => {
+  const { id } = req.params;
 
-  return res.render("users/profile", { pageTitle: `${name}'s Profile` });
+  const userDoc = await User.findById(id).populate("videos");
+  if (!userDoc) {
+    return res
+      .status(404)
+      .render("404", { pageTitle: "404 : User not found 😰" });
+  }
+
+  return res.render("users/profile", { pageTitle: "Profile", userDoc });
 };
 
 export const getEdit = (req, res) => {

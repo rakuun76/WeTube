@@ -19,14 +19,19 @@ import { publicOnly, loginOnly, OAuthOnly, passwordOnly } from "../middlewares";
 import multer from "multer";
 
 const userRouter = express.Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({
+  dest: "uploads/users/",
+  limits: {
+    fileSize: 3000000,
+  },
+});
 
 userRouter.route("/join").all(publicOnly).get(getJoin).post(postJoin);
 userRouter.route("/login").all(publicOnly).get(getLogin).post(postLogin);
 userRouter.get("/github/start", publicOnly, startGithubLogin);
 userRouter.get("/github/finish", publicOnly, finishGithubLogin);
 userRouter.get("/logout", loginOnly, logout);
-userRouter.get("/:id([0-9a-f]{24})", loginOnly, profile);
+userRouter.get("/:id([0-9a-f]{24})", profile);
 userRouter
   .route("/:id([0-9a-f]{24})/edit")
   .all(loginOnly)

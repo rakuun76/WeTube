@@ -1,3 +1,5 @@
+import Video from "./models/Video";
+
 export const setLocals = (req, res, next) => {
   res.locals.siteName = "WeTube";
   res.locals.loggedIn = Boolean(req.session.loggedIn);
@@ -9,7 +11,7 @@ export const publicOnly = (req, res, next) => {
   if (!req.session.loggedIn) {
     return next();
   } else {
-    return res.redirect(`/users/${req.session.user._id}`);
+    return res.status(403).redirect(`/users/${req.session.user._id}`);
   }
 };
 
@@ -17,7 +19,7 @@ export const loginOnly = (req, res, next) => {
   if (req.session.loggedIn) {
     return next();
   } else {
-    return res.render("users/login", {
+    return res.status(403).render("users/login", {
       pageTitle: "Login",
       errorMessage: "Login first",
     });
@@ -31,7 +33,7 @@ export const OAuthOnly = (req, res, next) => {
   if (OAuthOnly) {
     return next();
   } else {
-    return res.redirect(`/users/${_id}`);
+    return res.status(403).redirect(`/users/${_id}`);
   }
 };
 
@@ -42,8 +44,37 @@ export const passwordOnly = (req, res, next) => {
   if (!OAuthOnly) {
     return next();
   } else {
-    return res.redirect(`/users/${_id}`);
+    return res.status(403).redirect(`/users/${_id}`);
   }
 };
 
-//ownerOnly
+export const videoOwnerOnly = async (req, res, next) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    params: { id },
+  } = req;
+
+  const video = await Video.findById(id);
+  if (String(video.owner) === _id) {
+    next();
+  } else {
+    return res.status(403).redirect(`/videos/${id}`);
+  }
+};
+
+export const profileOwnerOnly = (req, res, next) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    params: { id },
+  } = req;
+
+  if (_id === id) {
+    next();
+  } else {
+    return res.status(403).redirect(`/users/${id}`);
+  }
+};

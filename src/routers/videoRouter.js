@@ -7,7 +7,7 @@ import {
   postEdit,
   deleteVideo,
 } from "../controllers/videoControllers";
-import { loginOnly } from "../middlewares";
+import { loginOnly, videoOwnerOnly } from "../middlewares";
 import multer from "multer";
 
 const videoRouter = express.Router();
@@ -26,9 +26,14 @@ videoRouter
 videoRouter.get("/:id([0-9a-f]{24})", watch);
 videoRouter
   .route("/:id([0-9a-f]{24})/edit")
-  .all(loginOnly)
+  .all(loginOnly, videoOwnerOnly)
   .get(getEdit)
   .post(postEdit);
-videoRouter.get("/:id([0-9a-f]{24})/delete", loginOnly, deleteVideo);
+videoRouter.get(
+  "/:id([0-9a-f]{24})/delete",
+  loginOnly,
+  videoOwnerOnly,
+  deleteVideo
+);
 
 export default videoRouter;

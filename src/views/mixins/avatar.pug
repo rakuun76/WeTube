@@ -1,0 +1,8 @@
+mixin avatar(user)
+    if user.avatarUrl
+        if user.avatarUrl[0] === 'h'
+            img(src=`${user.avatarUrl}`)
+        else
+            img(src=`/${user.avatarUrl}`)
+    else
+        img(src="/uploads/chiikawa.png")

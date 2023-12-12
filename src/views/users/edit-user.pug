@@ -1,19 +1,18 @@
 extends ../base
 
 block content
-    if errorMessage
-        h4=errorMessage
-    img(src=`/${user.avatarUrl}` width=100 height=100)
     form(method="POST" enctype="multipart/form-data")
+        if errorMessage
+            div.errorMessage ❌ #{errorMessage}
         label(for="avatar") Avatar
         input(id="avatar" name="avatar" type="file" accept="image/*")
         label(for="name") Name
-        input(id="name" name="name" type="text" value=user.name required)
+        input(id="name" name="name" type="text" value=loggedInUser.name required)
         label(for="email") Email
-        input(id="email" name="email" type="email" value=user.email required)
+        input(id="email" name="email" type="email" value=loggedInUser.email required)
         input(type="submit" value="Save")
-    hr
-    if user.OAuthOnly
-        a(href="create-pw") Create password &rarr;
-    else
-        a(href="change-pw") Change password &rarr;
+        div.edit-user_password
+            if loggedInUser.OAuthOnly
+                a(href="create-pw") Create password
+            else
+                a(href="change-pw") Change password

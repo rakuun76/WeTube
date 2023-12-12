@@ -2,7 +2,8 @@ extends base
 include mixins/videoInfo
 
 block content
-    each video in videos
-        +videoInfo(video)
-    else
-        span There is no video 😥
+    div.video_grid
+        each video in videos
+            +videoInfo(video)
+        else
+            span.empty_message There is no video 😥

@@ -2,12 +2,11 @@ extends base
 include mixins/videoInfo
 
 block content
-    form
+    form.search_form
         input(name="keyword" type="text" required placeholder="Enter the keyword")
-        input(type="submit" value="Search")
+        button
+            i.fas.fa-search
     
-    div
+    div.video_grid
         each video in videos
             +videoInfo(video)
-        else
-            span There is no video 😥

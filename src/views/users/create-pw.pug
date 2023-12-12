@@ -1,9 +1,9 @@
 extends ../base
 
 block content
-    if errorMessage
-        h4=errorMessage
     form(method="POST")
+        if errorMessage
+            div.errorMessage ❌ #{errorMessage}
         label(for="password") Password
         input(id="password" name="password" type="password" required)
         label(for="pwConfirm") Confirm password

@@ -1,0 +1,36 @@
+header {
+  padding: 20px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .header_logo {
+    font-size: 40px;
+    color: $red;
+  }
+  ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    li {
+      margin-left: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      .header_button {
+        border: 2px solid;
+        border-color: $clr;
+        padding: 5px 10px;
+        border-radius: 5px;
+        &:hover {
+          color: $bg;
+          background-color: $clr;
+        }
+      }
+    }
+  }
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+}

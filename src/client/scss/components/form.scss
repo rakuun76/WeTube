@@ -1,0 +1,43 @@
+form {
+  margin: 0 auto;
+  &:not(.search_form) {
+    max-width: 420px;
+    padding: 30px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+label {
+  padding-left: 3px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+input {
+  all: unset;
+  width: 92%;
+  font-size: 16px;
+  padding: 5px 15px;
+  margin-top: 7px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  &:-webkit-autofill {
+    -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0px 1000px $bg inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+input[type="submit"] {
+  padding: 8px 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: $red;
+  text-align: center;
+  cursor: pointer;
+}

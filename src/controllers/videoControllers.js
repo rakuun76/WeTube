@@ -2,7 +2,7 @@ import Video from "../models/Video";
 import User from "../models/User";
 
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort("-createdAt");
+  const videos = await Video.find({}).sort("-createdAt").populate("owner");
   return res.render("home", { pageTitle: "Home", videos });
 };
 
@@ -47,7 +47,7 @@ export const watch = async (req, res) => {
   if (!video) {
     return res
       .status(404)
-      .render("404", { pageTitle: "404 : Video not found 😰" });
+      .render("404", { pageTitle: "404", errorMessage: "Video not found 😰" });
   }
   return res.render("videos/watch", { pageTitle: video.title, video });
 };
@@ -58,7 +58,7 @@ export const getEdit = async (req, res) => {
   if (!video) {
     return res
       .status(404)
-      .render("404", { pageTitle: "404 : Video not found 😰" });
+      .render("404", { pageTitle: "404", errorMessage: "Video not found 😰" });
   }
   return res.render("videos/edit-video", {
     pageTitle: `Edit ${video.title}`,
@@ -100,7 +100,7 @@ export const search = async (req, res) => {
         //keyword 포함하는 제목
         $regex: new RegExp(keyword, "i"),
       },
-    });
+    }).populate("owner");
   }
   return res.render("search", { pageTitle: "Search", videos });
 };

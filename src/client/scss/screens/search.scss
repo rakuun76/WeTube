@@ -1,0 +1,29 @@
+.search_form {
+  max-width: 480px;
+  margin-bottom: 50px;
+  display: flex;
+  input {
+    all: unset;
+    width: 100%;
+    font-size: 20px;
+    padding: 5px;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    left: 12px;
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    &:-webkit-autofill {
+      -webkit-text-fill-color: #fff;
+      -webkit-box-shadow: 0 0 0px 1000px $bg inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
+  button {
+    all: unset;
+    font-size: 20px;
+    position: relative;
+    right: 12px;
+    cursor: pointer;
+  }
+}

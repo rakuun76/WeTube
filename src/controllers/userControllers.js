@@ -25,7 +25,7 @@ export const postJoin = async (req, res) => {
 
   //Mongoose Schema로 인해 생기는 error catch
   try {
-    await User.create({ name, email, password, pwConfirm });
+    await User.create({ name, email, password });
     return res.redirect("login");
   } catch (error) {
     return res.status(400).render("users/join", {
@@ -143,14 +143,20 @@ export const logout = (req, res) => {
 export const profile = async (req, res) => {
   const { id } = req.params;
 
-  const userDoc = await User.findById(id).populate("videos");
-  if (!userDoc) {
+  const user = await User.findById(id).populate({
+    path: "videos",
+    populate: {
+      path: "owner",
+      model: "User",
+    },
+  });
+  if (!user) {
     return res
       .status(404)
-      .render("404", { pageTitle: "404 : User not found 😰" });
+      .render("404", { pageTitle: "404", errorMessage: "User not found 😰" });
   }
 
-  return res.render("users/profile", { pageTitle: "Profile", userDoc });
+  return res.render("users/profile", { pageTitle: "Profile", user });
 };
 
 export const getEdit = (req, res) => {

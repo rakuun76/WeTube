@@ -1,9 +1,9 @@
 extends ../base
 
 block content
-    if errorMessage
-        h4=errorMessage
     form(method="POST" enctype="multipart/form-data")
+        if errorMessage
+            div.errorMessage ❌ #{errorMessage}
         label(for="video") Video
         input(id="video" name="video" type="file" required accept="video/*")
         label(for="title") Title

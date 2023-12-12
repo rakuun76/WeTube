@@ -1,0 +1,23 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  .profile_name {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .profile_email {
+    margin-bottom: 15px;
+  }
+  .profile_edit_btn {
+    color: $red;
+  }
+}

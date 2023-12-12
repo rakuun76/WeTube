@@ -1,0 +1,20 @@
+//videoInfo mixin
+.videoInfo-mixin {
+  .videoInfo-mixin_thumb {
+    height: 140px;
+    background-color: beige;
+    border-radius: 10px;
+  }
+  .videoInfo-mixin_data {
+    padding: 0 5px;
+    .videoInfo-mixin_title {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+    .videoInfo-mixin_meta {
+      font-size: 12px;
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+  }
+}

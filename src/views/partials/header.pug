@@ -1,0 +1,23 @@
+include ../mixins/avatar
+
+header
+    a(href="/").header_logo
+        i.fab.fa-youtube
+    nav
+        ul
+            li
+                a(href="/search")
+                    i.fas.fa-search
+            if loggedIn
+                li
+                    a(href=`/users/${loggedInUser._id}`)
+                        +avatar(loggedInUser)
+                li
+                    a(href="/videos/upload").header_button Upload
+                li
+                    a(href="/users/logout").header_button Logout
+            else
+                li
+                    a(href="/users/join").header_button Join
+                li
+                    a(href="/users/login").header_button Login

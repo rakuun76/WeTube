@@ -1,17 +1,16 @@
 extends ../base
 include ../mixins/videoInfo
+include ../mixins/avatar
 
 block content
-    img(src=`/${userDoc.avatarUrl}` width=100 height=100)
-    h4 Name
-    span=userDoc.name
-    h4 Email
-    span=userDoc.email
-    h4 Videos
-    each video in userDoc.videos
-        +videoInfo(video)
-    else
-        span There is no video 😥
-    if userDoc._id == user._id
-        hr
-        a(href=`${userDoc._id}/edit`) Edit profile &rarr;
+    div.profile
+        +avatar(user)
+        div.profile_name=user.name
+        div.profile_email=user.email
+        if loggedInUser._id == user._id
+            a(href=`${user._id}/edit`).profile_edit_btn Edit profile
+    div.video_grid
+        each video in user.videos
+            +videoInfo(video)
+        else
+            span.empty_message There is no video 😥

@@ -1,16 +1,17 @@
 extends ../base
+include ../mixins/avatar
 
 block content
     video(src=`/${video.fileUrl}` controls)
     div(style="display: flex;")
-        img(src=`/${video.owner.avatarUrl}` width=30 height=30)
+        +avatar(video.owner)
         a(href=`/users/${video.owner._id}`)=video.owner.name
     div
         small #{video.meta.views}#{(video.meta.views <= 1) ? "view" : "views"} 
         small #{video.createdAt}
         div #{video.hashtags.join(" ")}
         p=video.description
-    if video.owner._id == user._id
+    if video.owner._id == loggedInUser._id
         hr
         a(href=`${video._id}/edit`) Edit video &rarr;
         br

@@ -2,17 +2,32 @@ extends ../base
 include ../mixins/avatar
 
 block content
-    video(src=`/${video.fileUrl}` controls)
-    div(style="display: flex;")
-        +avatar(video.owner)
-        a(href=`/users/${video.owner._id}`)=video.owner.name
-    div
-        small #{video.meta.views}#{(video.meta.views <= 1) ? "view" : "views"} 
-        small #{video.createdAt}
-        div #{video.hashtags.join(" ")}
-        p=video.description
-    if video.owner._id == loggedInUser._id
-        hr
-        a(href=`${video._id}/edit`) Edit video &rarr;
-        br
-        a(href=`${video._id}/delete`) Delete video &rarr;
+    div#videoContainer
+        video(src=`/${video.fileUrl}`)
+        div#videoControls
+            button#playBtn Play
+            button#muteBtn Mute
+            input#volumeRange(type="range" value="1" step="0.1" min="0" max="1")
+            div
+                span#currentTime
+                span  / 
+                span#totalTime
+            input#timeline(type="range" value="0" step="0.1" min="0")
+            button#fullscreenBtn Enter Full Screen
+    //-
+        div(style="display: flex;")
+            +avatar(video.owner)
+            a(href=`/users/${video.owner._id}`)=video.owner.name
+        div
+            small #{video.meta.views}#{(video.meta.views <= 1) ? "view" : "views"} 
+            small #{video.createdAt}
+            div #{video.hashtags.join(" ")}
+            p=video.description
+        if video.owner._id == loggedInUser._id
+            hr
+            a(href=`${video._id}/edit`) Edit video &rarr;
+            br
+            a(href=`${video._id}/delete`) Delete video &rarr;
+
+block scripts
+    script(src="/assets/js/videoPlayer.js")

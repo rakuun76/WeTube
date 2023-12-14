@@ -14,7 +14,7 @@ label {
   font-weight: 600;
 }
 
-input {
+input:not([type="range"]) {
   all: unset;
   width: 92%;
   font-size: 16px;

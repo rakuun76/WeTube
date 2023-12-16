@@ -6,6 +6,7 @@ import { setLocals } from "./middlewares";
 import globalRouter from "./routers/globalRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
+import apiRouter from "./routers/apiRouter";
 
 const PORT = 4000;
 
@@ -32,6 +33,7 @@ app.use("/assets", express.static("assets"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
+app.use("/api", apiRouter);
 
 app.listen(PORT, () =>
   console.log(`✅ server listening on http://localhost:${PORT}`)

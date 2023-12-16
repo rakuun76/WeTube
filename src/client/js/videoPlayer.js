@@ -13,7 +13,10 @@ let volume = 1;
 let timeformat_w = 0;
 let hideTimeoutId = null;
 
-const handleVideoEnd = () => {
+const handleVideoEnded = () => {
+  const { id } = videoContainer.dataset;
+
+  fetch(`/api/videos/${id}/view`, { method: "POST" });
   playBtn.innerText = "Play";
 };
 
@@ -139,7 +142,7 @@ const handleMouseleave = () => {
   hideVideoControls();
 };
 
-video.addEventListener("ended", handleVideoEnd);
+video.addEventListener("ended", handleVideoEnded);
 playBtn.addEventListener("click", handlePlayBtnClick);
 muteBtn.addEventListener("click", handleMuteBtnClick);
 volumeRange.addEventListener("change", handleVolumeChange);

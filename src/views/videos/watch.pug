@@ -2,7 +2,7 @@ extends ../base
 include ../mixins/avatar
 
 block content
-    div#videoContainer
+    div#videoContainer(data-id=video._id)
         video(src=`/${video.fileUrl}`)
         div#videoControls
             button#playBtn Play

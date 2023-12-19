@@ -16,12 +16,13 @@ export const postUpload = async (req, res) => {
       user: { _id },
     },
     body: { title, description, hashtags },
-    file: { path },
+    files: { video, thumbnail },
   } = req;
 
   try {
-    const video = await Video.create({
-      fileUrl: path,
+    const newVideo = await Video.create({
+      videoUrl: video[0].path,
+      thumbnailUrl: thumbnail[0].path.replace(/[\\]/g, "/"),
       title,
       owner: _id,
       description,
@@ -29,10 +30,10 @@ export const postUpload = async (req, res) => {
     });
 
     const user = await User.findById(_id);
-    user.videos.push(video._id);
+    user.videos.push(newVideo._id);
     await user.save();
 
-    return res.redirect(`${video._id}`);
+    return res.redirect(`${newVideo._id}`);
   } catch (error) {
     return res.status(400).render("videos/upload", {
       pageTitle: "Upload",

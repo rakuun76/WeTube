@@ -11,6 +11,7 @@ export const publicOnly = (req, res, next) => {
   if (!req.session.loggedIn) {
     return next();
   } else {
+    req.flash("error", "Public only");
     return res.status(403).redirect(`/users/${req.session.user._id}`);
   }
 };
@@ -19,10 +20,8 @@ export const loginOnly = (req, res, next) => {
   if (req.session.loggedIn) {
     return next();
   } else {
-    return res.status(403).render("users/login", {
-      pageTitle: "Login",
-      errorMessage: "Login first",
-    });
+    req.flash("error", "Log in first");
+    return res.status(403).redirect("/users/login");
   }
 };
 
@@ -33,6 +32,7 @@ export const OAuthOnly = (req, res, next) => {
   if (OAuthOnly) {
     return next();
   } else {
+    req.flash("error", "OAuth user only");
     return res.status(403).redirect(`/users/${_id}`);
   }
 };
@@ -44,6 +44,7 @@ export const passwordOnly = (req, res, next) => {
   if (!OAuthOnly) {
     return next();
   } else {
+    req.flash("error", "Only users with password");
     return res.status(403).redirect(`/users/${_id}`);
   }
 };
@@ -60,6 +61,7 @@ export const videoOwnerOnly = async (req, res, next) => {
   if (String(video.owner) === _id) {
     next();
   } else {
+    req.flash("error", "Video owner only");
     return res.status(403).redirect(`/videos/${id}`);
   }
 };
@@ -75,6 +77,7 @@ export const profileOwnerOnly = (req, res, next) => {
   if (_id === id) {
     next();
   } else {
+    req.flash("error", "Profile owner only");
     return res.status(403).redirect(`/users/${id}`);
   }
 };

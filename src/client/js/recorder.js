@@ -7,10 +7,10 @@ const recordingBtn = document.getElementById("recordingBtn");
 let recorder;
 let recordingFile;
 
-const files = {
-  input: "recording.webm",
-  output: "output.mp4",
-  thumbnail: "thumbnail.jpg",
+const FILES = {
+  INPUT: "recording.webm",
+  OUTPUT: "output.mp4",
+  THUMBNAIL: "thumbnail.jpg",
 };
 
 const downloadFile = (fileUrl, fileName) => {
@@ -29,21 +29,21 @@ const handleDownloadRecording = async () => {
   const ffmpeg = new FFmpeg();
   await ffmpeg.load();
 
-  await ffmpeg.writeFile(files.input, await fetchFile(recordingFile));
+  await ffmpeg.writeFile(FILES.INPUT, await fetchFile(recordingFile));
 
-  await ffmpeg.exec(["-i", files.input, "-r", "60", files.output]);
+  await ffmpeg.exec(["-i", FILES.INPUT, "-r", "60", FILES.OUTPUT]);
   await ffmpeg.exec([
     "-i",
-    files.input,
+    FILES.INPUT,
     "-ss",
     "00:00:01",
     "-frames:v",
     "1",
-    files.thumbnail,
+    FILES.THUMBNAIL,
   ]);
 
-  const mp4File = await ffmpeg.readFile(files.output);
-  const thumbnailFile = await ffmpeg.readFile(files.thumbnail);
+  const mp4File = await ffmpeg.readFile(FILES.OUTPUT);
+  const thumbnailFile = await ffmpeg.readFile(FILES.THUMBNAIL);
 
   const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
   const thumbnailBlob = new Blob([thumbnailFile.buffer], { type: "image/jpg" });
@@ -51,12 +51,12 @@ const handleDownloadRecording = async () => {
   const mp4Url = URL.createObjectURL(mp4Blob);
   const thumbnailUrl = URL.createObjectURL(thumbnailBlob);
 
-  downloadFile(mp4Url, files.output);
-  downloadFile(thumbnailUrl, files.thumbnail);
+  downloadFile(mp4Url, FILES.OUTPUT);
+  downloadFile(thumbnailUrl, FILES.THUMBNAIL);
 
-  await ffmpeg.deleteFile(files.input);
-  await ffmpeg.deleteFile(files.output);
-  await ffmpeg.deleteFile(files.thumbnail);
+  await ffmpeg.deleteFile(FILES.INPUT);
+  await ffmpeg.deleteFile(FILES.OUTPUT);
+  await ffmpeg.deleteFile(FILES.THUMBNAIL);
 
   URL.revokeObjectURL(recordingFile);
   URL.revokeObjectURL(mp4Url);

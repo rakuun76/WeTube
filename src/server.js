@@ -19,6 +19,7 @@ app.set("view engine", "pug");
 
 app.use(logger);
 app.use(express.urlencoded({ extended: true })); //for req.body
+app.use(express.json()); //for req.body
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,

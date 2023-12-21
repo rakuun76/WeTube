@@ -2,7 +2,7 @@ extends ../base
 include ../mixins/avatar
 
 block content
-    div#videoContainer(data-id=video._id)
+    div#videoContainer(data-id=video._id data-logged=loggedIn)
         video(src=`/${video.videoUrl}`)
         div#videoControls
             button#playBtn Play
@@ -23,11 +23,27 @@ block content
             small #{video.createdAt}
             div #{video.hashtags.join(" ")}
             p=video.description
-        if video.owner._id == loggedInUser._id
-            hr
-            a(href=`${video._id}/edit`) Edit video &rarr;
-            br
-            a(href=`${video._id}/delete`) Delete video &rarr;
+    if String(video.owner._id) === String(loggedInUser._id)
+        hr
+        a(href=`${video._id}/edit`) Edit video &rarr;
+        br
+        a(href=`${video._id}/delete`) Delete video &rarr;
+    
+    if loggedIn
+        div
+            form#commentForm
+                textarea(cols="30" rows="10" required placeholder="Write a comment")
+                button Add
+
+    div
+        ul#commentsList
+            each comment in video.comments.reverse()
+                li(data-id=comment._id)
+                    span=comment.text
+                    if String(comment.owner._id) === String(loggedInUser._id)
+                        button ❌
 
 block scripts
     script(src="/assets/js/videoPlayer.js")
+    if loggedIn
+        script(src="/assets/js/comment.js")

@@ -1,5 +1,6 @@
 import Video from "../models/Video";
 import User from "../models/User";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort("-createdAt").populate("owner");
@@ -44,7 +45,7 @@ export const postUpload = async (req, res) => {
 
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id).populate("owner");
+  const video = await Video.findById(id).populate("owner").populate("comments");
   if (!video) {
     return res
       .status(404)
@@ -88,6 +89,10 @@ export const deleteVideo = async (req, res) => {
     (id) => String(id) !== String(deletedVideo._id)
   );
   await owner.save();
+
+  deletedVideo.comments.forEach(async (comment) => {
+    await Comment.findByIdAndDelete(comment);
+  });
 
   return res.redirect("/");
 };

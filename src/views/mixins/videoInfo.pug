@@ -4,5 +4,5 @@ mixin videoInfo(video)
         div.videoInfo-mixin_data
             div.videoInfo-mixin_title=video.title
             div.videoInfo-mixin_meta
-                span #{video.owner.name} • 
-                span #{video.meta.views}회
+                span(onclick=`window.location = "/users/${video.owner._id}"; return false`) #{video.owner.name}
+                span  • #{video.meta.views}회

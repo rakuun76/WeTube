@@ -14,6 +14,7 @@ import {
   postChangePW,
   getCreatePW,
   postCreatePW,
+  deleteUser,
 } from "../controllers/userControllers";
 import {
   publicOnly,
@@ -53,5 +54,11 @@ userRouter
   .all(loginOnly, profileOwnerOnly, OAuthOnly)
   .get(getCreatePW)
   .post(postCreatePW);
+userRouter.get(
+  "/:id([0-9a-f]{24})/delete",
+  loginOnly,
+  profileOwnerOnly,
+  deleteUser
+);
 
 export default userRouter;

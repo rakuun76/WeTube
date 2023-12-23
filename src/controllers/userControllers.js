@@ -1,4 +1,6 @@
 import User from "../models/User";
+import Video from "../models/Video";
+import Comment from "../models/Comment";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => {
@@ -260,4 +262,22 @@ export const postCreatePW = async (req, res) => {
   req.session.user = user;
 
   return res.redirect(`/users/${_id}`);
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  const deletedUser = await User.findByIdAndDelete(id);
+
+  for (let video of deletedUser.videos) {
+    const deletedVideo = await Video.findByIdAndDelete(video);
+    deletedVideo.comments.forEach(async (comment) => {
+      await Comment.findByIdAndDelete(comment);
+    });
+  }
+
+  req.session.user = null;
+  req.session.loggedIn = false;
+
+  return res.redirect("/");
 };

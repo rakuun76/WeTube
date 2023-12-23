@@ -1,7 +1,7 @@
 include ../mixins/avatar
 
 header
-    a(href="/").header_logo
+    a(href="/").header__logo
         i.fab.fa-youtube
     nav
         ul
@@ -13,11 +13,11 @@ header
                     a(href=`/users/${loggedInUser._id}`)
                         +avatar(loggedInUser)
                 li
-                    a(href="/videos/upload").header_button Upload
+                    a(href="/videos/upload").header__button Upload
                 li
-                    a(href="/users/logout").header_button Logout
+                    a(href="/users/logout").header__button Logout
             else
                 li
-                    a(href="/users/join").header_button Join
+                    a(href="/users/join").header__button Join
                 li
-                    a(href="/users/login").header_button Login
+                    a(href="/users/login").header__button Login

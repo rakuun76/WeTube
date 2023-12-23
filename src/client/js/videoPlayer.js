@@ -13,14 +13,59 @@ let volume = 1;
 let timeformat_w = 0;
 let hideTimeoutId = null;
 
-const handleVideoEnded = () => {
-  const { id } = videoContainer.dataset;
+const hideVideoControls = () => videoControls.classList.remove("showing");
 
-  fetch(`/api/videos/${id}/view`, { method: "POST" });
-  playBtn.innerText = "Play";
+const handleMousemove = () => {
+  if (video.paused) {
+    return;
+  }
+
+  videoControls.classList.add("showing");
+
+  if (hideTimeoutId) {
+    clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  hideTimeoutId = setTimeout(hideVideoControls, 3000);
 };
 
-const handlePlayBtnClick = () => {
+const handleMouseleave = () => {
+  if (video.paused) {
+    return;
+  }
+
+  hideVideoControls();
+};
+
+//time format을 위한 가중치 결정
+const setWeight = (duration) => {
+  if (duration < 600) {
+    timeformat_w = 4;
+  } else if (duration < 3600) {
+    timeformat_w = 3;
+  } else if (duration < 36000) {
+    timeformat_w = 1;
+  } else {
+    timeformat_w = 0;
+  }
+};
+
+const formatTime = (seconds) =>
+  new Date(seconds * 1000).toISOString().slice(11 + timeformat_w, 19);
+
+const handleLoadedMetadata = () => {
+  setWeight(video.duration);
+  currentTime.innerText = formatTime(0);
+  totalTime.innerText = formatTime(Math.floor(video.duration));
+  timeline.max = Math.floor(video.duration * 10) / 10;
+};
+
+const handleTimeUpdate = () => {
+  currentTime.innerText = formatTime(Math.floor(video.currentTime));
+  timeline.value = Math.floor(video.currentTime * 10) / 10;
+};
+
+const playAndStop = () => {
   if (video.paused) {
     playBtn.innerText = "Pause";
     video.play();
@@ -29,6 +74,39 @@ const handlePlayBtnClick = () => {
     video.pause();
   }
 };
+
+const handleVideoClick = playAndStop;
+
+const handleVideoPlay = () => {
+  if (hideTimeoutId) {
+    clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  hideTimeoutId = setTimeout(hideVideoControls, 3000);
+};
+
+const handleVideoPause = () => {
+  if (hideTimeoutId) {
+    clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  videoControls.classList.add("showing");
+};
+
+const handleVideoEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, { method: "POST" });
+
+  playBtn.innerText = "Play";
+
+  if (hideTimeoutId) {
+    clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  videoControls.classList.add("showing");
+};
+
+const handlePlayBtnClick = playAndStop;
 
 const mute = () => {
   muteBtn.innerText = "Unmute";
@@ -74,34 +152,6 @@ const handleVolumeInput = (event) => {
   video.volume = value;
 };
 
-//time format을 위한 가중치 결정
-const setWeight = (duration) => {
-  if (duration < 600) {
-    timeformat_w = 4;
-  } else if (duration < 3600) {
-    timeformat_w = 3;
-  } else if (duration < 36000) {
-    timeformat_w = 1;
-  } else {
-    timeformat_w = 0;
-  }
-};
-
-const formatTime = (seconds) =>
-  new Date(seconds * 1000).toISOString().slice(11 + timeformat_w, 19);
-
-const handleLoadedMetadata = () => {
-  setWeight(video.duration);
-  currentTime.innerText = formatTime(0);
-  totalTime.innerText = formatTime(Math.floor(video.duration));
-  timeline.max = Math.floor(video.duration * 10) / 10;
-};
-
-const handleTimeUpdate = () => {
-  currentTime.innerText = formatTime(Math.floor(video.currentTime));
-  timeline.value = Math.floor(video.currentTime * 10) / 10;
-};
-
 const handleTimelineInput = (event) => {
   const {
     target: { value },
@@ -126,31 +176,44 @@ const handleFullscreenchange = () => {
   }
 };
 
-const hideVideoControls = () => videoControls.classList.remove("showing");
+const handleKeydown = (event) => {
+  const { key, target } = event;
 
-const handleMousemove = () => {
-  videoControls.classList.add("showing");
-
-  if (hideTimeoutId) {
-    clearTimeout(hideTimeoutId);
-    hideTimeoutId = null;
+  //textarea keydown 감지 무시
+  if (target !== document.body) {
+    return;
   }
-  hideTimeoutId = setTimeout(hideVideoControls, 3000);
+
+  if (key === " ") {
+    event.preventDefault();
+    playAndStop();
+  } else if (key === "f" || key === "F") {
+    handleFullscreenBtnClick();
+  } else if (key === "m" || key === "M") {
+    handleMuteBtnClick();
+  } else if (key === "ArrowLeft") {
+    video.currentTime = video.currentTime < 5 ? 0 : video.currentTime - 5;
+  } else if (key === "ArrowRight") {
+    video.currentTime =
+      video.duration < video.currentTime + 5
+        ? video.duration
+        : video.currentTime + 5;
+  }
 };
 
-const handleMouseleave = () => {
-  hideVideoControls();
-};
-
+videoContainer.addEventListener("mousemove", handleMousemove);
+videoContainer.addEventListener("mouseleave", handleMouseleave);
+video.addEventListener("loadedmetadata", handleLoadedMetadata);
+video.addEventListener("timeupdate", handleTimeUpdate);
+video.addEventListener("click", handleVideoClick);
+video.addEventListener("play", handleVideoPlay);
+video.addEventListener("pause", handleVideoPause);
 video.addEventListener("ended", handleVideoEnded);
 playBtn.addEventListener("click", handlePlayBtnClick);
 muteBtn.addEventListener("click", handleMuteBtnClick);
 volumeRange.addEventListener("change", handleVolumeChange);
 volumeRange.addEventListener("input", handleVolumeInput);
-video.addEventListener("loadedmetadata", handleLoadedMetadata);
-video.addEventListener("timeupdate", handleTimeUpdate);
 timeline.addEventListener("input", handleTimelineInput);
 fullscreenBtn.addEventListener("click", handleFullscreenBtnClick);
 document.addEventListener("fullscreenchange", handleFullscreenchange);
-videoContainer.addEventListener("mousemove", handleMousemove);
-videoContainer.addEventListener("mouseleave", handleMouseleave);
+document.addEventListener("keydown", handleKeydown);

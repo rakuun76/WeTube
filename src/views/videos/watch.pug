@@ -4,7 +4,7 @@ include ../mixins/avatar
 block content
     div#videoContainer(data-id=video._id data-logged=loggedIn)
         video(src=`/${video.videoUrl}`)
-        div#videoControls
+        div#videoControls.showing
             button#playBtn Play
             button#muteBtn Mute
             input#volumeRange(type="range" value="1" step="0.1" min="0" max="1")

@@ -1,4 +1,3 @@
-//videoInfo mixin
 .videoInfo-mixin {
   .videoInfo-mixin_thumb {
     height: 140px;
@@ -14,7 +13,10 @@
     .videoInfo-mixin_meta {
       font-size: 12px;
       margin-top: 5px;
-      opacity: 0.8;
+      color: #a0a0a0;
+      span:first-child:hover {
+        color: $clr;
+      }
     }
   }
 }

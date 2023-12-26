@@ -1,7 +1,7 @@
 form {
   margin: 0 auto;
-  &:not(.search_form) {
-    max-width: 420px;
+  &:not(.search-form, .add-comment__form) {
+    width: 420px;
     padding: 30px;
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.2);

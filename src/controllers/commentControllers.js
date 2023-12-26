@@ -1,4 +1,5 @@
 import Video from "../models/Video";
+import User from "../models/User";
 import Comment from "../models/Comment";
 
 export const createComment = async (req, res) => {
@@ -13,6 +14,11 @@ export const createComment = async (req, res) => {
     return res.sendStatus(404);
   }
 
+  const owner = await User.findById(user._id);
+  if (!owner) {
+    return res.sendStatus(404);
+  }
+
   const comment = await Comment.create({
     text,
     owner: user._id,
@@ -22,7 +28,7 @@ export const createComment = async (req, res) => {
   video.comments.push(comment._id);
   await video.save();
 
-  return res.status(201).json({ commentId: comment._id });
+  return res.status(201).json({ commentId: comment._id, owner });
 };
 
 export const deleteComment = async (req, res) => {

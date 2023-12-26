@@ -1,18 +1,18 @@
 .videoInfo-mixin {
-  .videoInfo-mixin_thumb {
+  .videoInfo-mixin__thumb {
     height: 140px;
     background-color: beige;
     border-radius: 10px;
   }
-  .videoInfo-mixin_data {
+  .videoInfo-mixin__data {
     padding: 0 5px;
-    .videoInfo-mixin_title {
+    .videoInfo-mixin__title {
       font-size: 18px;
       margin-top: 8px;
     }
-    .videoInfo-mixin_meta {
-      font-size: 12px;
-      margin-top: 5px;
+    .videoInfo-mixin__meta {
+      font-size: 14px;
+      margin-top: 7px;
       color: #a0a0a0;
       span:first-child:hover {
         color: $clr;

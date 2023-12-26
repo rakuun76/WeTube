@@ -21,7 +21,7 @@ export const postJoin = async (req, res) => {
   if (already) {
     return res.status(400).render("users/join", {
       pageTitle: "Join",
-      errorMessage: "This name/email is already taken.",
+      errorMessage: "This name/email is already taken",
     });
   }
 
@@ -48,7 +48,7 @@ export const postLogin = async (req, res) => {
   if (!user) {
     return res.status(400).render("users/login", {
       pageTitle: "Login",
-      errorMessage: "An account with this email does not exist.",
+      errorMessage: "An account with this email does not exist",
     });
   }
 
@@ -56,7 +56,7 @@ export const postLogin = async (req, res) => {
   if (!match) {
     return res.status(400).render("users/login", {
       pageTitle: "Login",
-      errorMessage: "Wrong password.",
+      errorMessage: "Wrong password",
     });
   }
 
@@ -268,6 +268,14 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   const deletedUser = await User.findByIdAndDelete(id);
+
+  const deletedUserComments = await Comment.find({ owner: id });
+  for (let comment of deletedUserComments) {
+    await Comment.findByIdAndDelete(comment._id);
+    const video = await Video.findById(comment.video);
+    video.comments = video.comments.filter((e) => e !== comment._id);
+    await video.save();
+  }
 
   for (let video of deletedUser.videos) {
     const deletedVideo = await Video.findByIdAndDelete(video);

@@ -2,14 +2,14 @@
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   margin-top: 15px;
   padding-top: 30px;
-  .social-login_btn {
+  .social-login__btn {
     display: block;
     width: 92%;
     padding: 8px 15px;
     font-size: 20px;
     font-weight: 600;
-    border-radius: 5px;
     border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
     text-align: center;
     background-color: $bg;
     cursor: pointer;

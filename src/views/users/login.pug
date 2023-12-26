@@ -3,7 +3,7 @@ extends ../base
 block content
     form(method="POST")
         if errorMessage
-            div.errorMessage ❌ #{errorMessage}
+            div.error-message ⚠ #{errorMessage}
         label(for="email") Email
         input(id="email" name="email" type="email" required)
         label(for="password") Password

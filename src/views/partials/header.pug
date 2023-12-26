@@ -6,11 +6,11 @@ header
     nav
         ul
             li
-                a(href="/search")
+                a(href="/search").header__search.header__button
                     i.fas.fa-search
             if loggedIn
                 li
-                    a(href=`/users/${loggedInUser._id}`)
+                    a(href=`/users/${loggedInUser._id}`).header__avatar
                         +avatar(loggedInUser)
                 li
                     a(href="/videos/upload").header__button Upload

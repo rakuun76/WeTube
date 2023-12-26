@@ -73,7 +73,7 @@ const handleStartRecording = async () => {
   recordingBtn.removeEventListener("click", handleStartRecording);
 
   const stream = await navigator.mediaDevices.getUserMedia({
-    audio: true,
+    audio: false,
     video: {
       width: 1024,
       height: 576,
@@ -101,4 +101,9 @@ const handleStartRecording = async () => {
   }, 5000);
 };
 
+const handlePreviewPlay = () => {
+  preview.classList.remove("hide");
+};
+
 recordingBtn.addEventListener("click", handleStartRecording);
+preview.addEventListener("play", handlePreviewPlay);

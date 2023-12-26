@@ -9,11 +9,15 @@
 @import "./components/shared";
 @import "./components/form";
 @import "./components/social-login";
+@import "./components/message";
+@import "./components/video-player";
 
 //Screens
 @import "./screens/search";
 @import "./screens/profile";
 @import "./screens/edit-user";
+@import "./screens/upload";
+@import "./screens/watch";
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,

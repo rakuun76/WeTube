@@ -1,12 +1,12 @@
 extends ../base
 
 block content
-    div#videoRecorder
-        video#preview
+    div.recorder
+        video#preview.hide
         button#recordingBtn Start Recording
     form(method="POST" enctype="multipart/form-data")
         if errorMessage
-            div.errorMessage ❌ #{errorMessage}
+            div.error-message ⚠ #{errorMessage}
         label(for="video") Video
         input(id="video" name="video" type="file" required accept="video/*")
         label(for="thumbnail") Thumbnail

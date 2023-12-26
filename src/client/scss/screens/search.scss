@@ -1,4 +1,4 @@
-.search_form {
+.search-form {
   max-width: 480px;
   margin-bottom: 50px;
   display: flex;
@@ -10,6 +10,10 @@
     border-bottom: 3px solid rgba(255, 255, 255, 0.2);
     position: relative;
     left: 12px;
+    transition: border-bottom 0.2s ease-in-out;
+    &:focus {
+      border-bottom: 3px solid rgba($color: $clr, $alpha: 1);
+    }
     &::placeholder {
       color: rgba(255, 255, 255, 0.5);
     }

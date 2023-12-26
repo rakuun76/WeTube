@@ -2,46 +2,59 @@ extends ../base
 include ../mixins/avatar
 
 block content
-    div#videoContainer(data-id=video._id data-logged=loggedIn)
+    div#videoContainer(data-id=video._id)
         video(src=`/${video.videoUrl}`)
-        div#videoControls.showing
-            button#playBtn Play
-            button#muteBtn Mute
-            input#volumeRange(type="range" value="1" step="0.1" min="0" max="1")
-            div
-                span#currentTime
-                span  / 
-                span#totalTime
-            input#timeline(type="range" value="0" step="0.1" min="0")
-            button#fullscreenBtn Enter Full Screen
-    //-
-        div(style="display: flex;")
+        div#videoControls.videoControls.showing
+            input#timeline.videoControls__timeline(type="range" value="0" step="0.1" min="0")
+            div.videoControls__play
+                span#playBtn.videoControls__playBtn
+                    i.fas.fa-play
+                div.videoControls__time
+                    span#currentTime
+                    span  / 
+                    span#totalTime
+            div.videoControls__volume
+                span#muteBtn.videoControls__muteBtn
+                    i.fas.fa-volume-up
+                input#volumeRange.videoControls__volumeRange(type="range" value="1" step="0.1" min="0" max="1")
+            span#fullscreenBtn.videoControls__fullscreenBtn
+                i.fas.fa-expand
+    div.video-data
+        div.video-data__header
+            h1.video-data__title=video.title
+            if String(video.owner._id) === String(loggedInUser._id)
+                div.video-data__owner-only-btn
+                    a(href=`${video._id}/edit`) Edit video
+                    a(href=`${video._id}/delete`) Delete video
+        a(href=`/users/${video.owner._id}`).video-data__owner
             +avatar(video.owner)
-            a(href=`/users/${video.owner._id}`)=video.owner.name
-        div
-            small #{video.meta.views}#{(video.meta.views <= 1) ? "view" : "views"} 
-            small #{video.createdAt}
-            div #{video.hashtags.join(" ")}
+            span=video.owner.name
+        div.video-data__script
+            small #{video.meta.views} #{(video.meta.views <= 1) ? "view" : "views"}
+            small #{new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
+            small #{video.hashtags.join(" ")}
             p=video.description
-    if String(video.owner._id) === String(loggedInUser._id)
-        hr
-        a(href=`${video._id}/edit`) Edit video &rarr;
-        br
-        a(href=`${video._id}/delete`) Delete video &rarr;
     
-    if loggedIn
-        div
-            form#commentForm
-                textarea(cols="30" rows="10" required placeholder="Write a comment")
-                button Add
+    div.comments-header
+        h1 Comments
+        hr
 
-    div
+    if loggedIn
+        div.add-comment
+            form#commentForm.add-comment__form
+                textarea.add-comment__textarea(required placeholder="Write a comment")
+                button.add-comment__button Add
+
+    div.comments
         ul#commentsList
             each comment in video.comments.reverse()
-                li(data-id=comment._id)
-                    span=comment.text
+                li(data-id=comment._id).comment
+                    a(href=`/users/${comment.owner._id}`).comment__avatar
+                        +avatar(comment.owner)
+                    a(href=`/users/${comment.owner._id}`).comment__name=comment.owner.name
+                    span.comment__content=comment.text
                     if String(comment.owner._id) === String(loggedInUser._id)
-                        button ❌
+                        i.fas.fa-trash.comment__delete-btn
 
 block scripts
     script(src="/assets/js/videoPlayer.js")

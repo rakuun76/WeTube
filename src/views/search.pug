@@ -2,11 +2,11 @@ extends base
 include mixins/videoInfo
 
 block content
-    form.search_form
+    form.search-form
         input(name="keyword" type="text" required placeholder="Enter the keyword")
         button
             i.fas.fa-search
     
-    div.video_grid
+    div.video-grid
         each video in videos
             +videoInfo(video)

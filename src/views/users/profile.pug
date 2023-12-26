@@ -5,12 +5,12 @@ include ../mixins/avatar
 block content
     div.profile
         +avatar(user)
-        div.profile_name=user.name
-        div.profile_email=user.email
+        div.profile__name=user.name
+        div.profile__email=user.email
         if loggedInUser._id == user._id
-            a(href=`${user._id}/edit`).profile_edit_btn Edit profile
-    div.video_grid
+            a(href=`${user._id}/edit`).profile__edit-btn Edit profile
+    div.video-grid
         each video in user.videos
             +videoInfo(video)
         else
-            span.empty_message There is no video 😥
+            span.empty-message There is no video 😥

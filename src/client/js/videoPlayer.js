@@ -2,12 +2,15 @@ const videoContainer = document.getElementById("videoContainer");
 const video = document.querySelector("video");
 const videoControls = document.getElementById("videoControls");
 const playBtn = document.getElementById("playBtn");
+const playBtnIcon = playBtn.querySelector("i");
 const muteBtn = document.getElementById("muteBtn");
+const muteBtnIcon = muteBtn.querySelector("i");
 const volumeRange = document.getElementById("volumeRange");
 const currentTime = document.getElementById("currentTime");
 const totalTime = document.getElementById("totalTime");
 const timeline = document.getElementById("timeline");
 const fullscreenBtn = document.getElementById("fullscreenBtn");
+const fullscreenBtnIcon = fullscreenBtn.querySelector("i");
 
 let volume = 1;
 let timeformat_w = 0;
@@ -67,10 +70,10 @@ const handleTimeUpdate = () => {
 
 const playAndStop = () => {
   if (video.paused) {
-    playBtn.innerText = "Pause";
+    playBtnIcon.classList = "fas fa-pause";
     video.play();
   } else {
-    playBtn.innerText = "Play";
+    playBtnIcon.classList = "fas fa-play";
     video.pause();
   }
 };
@@ -97,7 +100,7 @@ const handleVideoEnded = () => {
   const { id } = videoContainer.dataset;
   fetch(`/api/videos/${id}/view`, { method: "POST" });
 
-  playBtn.innerText = "Play";
+  playBtnIcon.classList = "fas fa-play";
 
   if (hideTimeoutId) {
     clearTimeout(hideTimeoutId);
@@ -109,12 +112,12 @@ const handleVideoEnded = () => {
 const handlePlayBtnClick = playAndStop;
 
 const mute = () => {
-  muteBtn.innerText = "Unmute";
+  muteBtnIcon.classList = "fas fa-volume-mute";
   video.muted = true;
 };
 
 const unmute = () => {
-  muteBtn.innerText = "Mute";
+  muteBtnIcon.classList = "fas fa-volume-up";
   video.muted = false;
 };
 
@@ -170,9 +173,9 @@ const handleFullscreenBtnClick = () => {
 //ESC 같은 조작이 발생했을 때에도 버튼 텍스트 변경을 위해
 const handleFullscreenchange = () => {
   if (document.fullscreenElement) {
-    fullscreenBtn.innerText = "Exit Fullscreen";
+    fullscreenBtnIcon.classList = "fas fa-compress";
   } else {
-    fullscreenBtn.innerText = "Enter Fullscreen";
+    fullscreenBtnIcon.classList = "fas fa-expand";
   }
 };
 

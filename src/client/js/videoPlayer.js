@@ -13,7 +13,6 @@ const fullscreenBtn = document.getElementById("fullscreenBtn");
 const fullscreenBtnIcon = fullscreenBtn.querySelector("i");
 
 let volume = 1;
-let timeformat_w = 0;
 let hideTimeoutId = null;
 
 const hideVideoControls = () => videoControls.classList.remove("showing");
@@ -40,24 +39,10 @@ const handleMouseleave = () => {
   hideVideoControls();
 };
 
-//time format을 위한 가중치 결정
-const setWeight = (duration) => {
-  if (duration < 600) {
-    timeformat_w = 4;
-  } else if (duration < 3600) {
-    timeformat_w = 3;
-  } else if (duration < 36000) {
-    timeformat_w = 1;
-  } else {
-    timeformat_w = 0;
-  }
-};
-
 const formatTime = (seconds) =>
-  new Date(seconds * 1000).toISOString().slice(11 + timeformat_w, 19);
+  new Date(seconds * 1000).toISOString().substring(15, 19);
 
 const handleCanplay = () => {
-  setWeight(video.duration);
   currentTime.innerText = formatTime(0);
   totalTime.innerText = formatTime(Math.floor(video.duration));
   timeline.max = Math.floor(video.duration * 10) / 10;

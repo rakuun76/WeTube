@@ -1,4 +1,8 @@
 import express from "express";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+import onDeploy from "../ondeploy";
 import {
   getUpload,
   postUpload,
@@ -8,9 +12,14 @@ import {
   deleteVideo,
 } from "../controllers/videoControllers";
 import { loginOnly, videoOwnerOnly } from "../middlewares";
-import multer from "multer";
 
 const videoRouter = express.Router();
+const s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype.includes("video")) {
@@ -23,10 +32,23 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({
-  storage: storage,
   limits: {
     fileSize: 10000000,
   },
+  storage: onDeploy
+    ? multerS3({
+        s3: s3,
+        bucket: "rakuun76-wetube",
+        acl: "public-read",
+        key: function (req, file, cb) {
+          if (file.mimetype.includes("video")) {
+            cb(null, `videos/${Date.now()}`);
+          } else if (file.mimetype.includes("image")) {
+            cb(null, `thumbnails/${Date.now()}`);
+          }
+        },
+      })
+    : storage,
 });
 
 videoRouter

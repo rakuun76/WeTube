@@ -1,4 +1,8 @@
 import express from "express";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+import onDeploy from "../ondeploy";
 import {
   getJoin,
   postJoin,
@@ -23,14 +27,26 @@ import {
   passwordOnly,
   profileOwnerOnly,
 } from "../middlewares";
-import multer from "multer";
 
 const userRouter = express.Router();
+const s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
 const upload = multer({
-  dest: "uploads/users/",
+  dest: "uploads/avatars/",
   limits: {
     fileSize: 3000000,
   },
+  storage: onDeploy
+    ? multerS3({
+        s3: s3,
+        bucket: "rakuun76-wetube/avatars",
+        acl: "public-read",
+      })
+    : undefined,
 });
 
 userRouter.route("/join").all(publicOnly).get(getJoin).post(postJoin);

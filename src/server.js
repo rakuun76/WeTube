@@ -9,7 +9,7 @@ import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 import apiRouter from "./routers/apiRouter";
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 const logger = morgan("dev");
@@ -38,6 +38,4 @@ app.use("/users", userRouter);
 app.use("/videos", videoRouter);
 app.use("/api", apiRouter);
 
-app.listen(PORT, () =>
-  console.log(`✅ server listening on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`✅ server listening on PORT:${PORT}`));

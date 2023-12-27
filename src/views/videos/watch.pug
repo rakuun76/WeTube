@@ -3,7 +3,7 @@ include ../mixins/avatar
 
 block content
     div#videoContainer(data-id=video._id)
-        video(src=`/${video.videoUrl}`)
+        video(src=`${onDeploy ? "" : "/"}${video.videoUrl}`)
         div#videoControls.videoControls.showing
             input#timeline.videoControls__timeline(type="range" value="0" step="0.1" min="0")
             div.videoControls__play

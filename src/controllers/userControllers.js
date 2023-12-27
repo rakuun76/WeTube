@@ -2,6 +2,7 @@ import User from "../models/User";
 import Video from "../models/Video";
 import Comment from "../models/Comment";
 import bcrypt from "bcrypt";
+import onDeploy from "../ondeploy";
 
 export const getJoin = (req, res) => {
   return res.render("users/join", { pageTitle: "Join" });
@@ -193,7 +194,11 @@ export const postEdit = async (req, res) => {
 
   const updatedUser = await User.findByIdAndUpdate(
     _id,
-    { avatarUrl: file ? file.path : avatarUrl, name, email },
+    {
+      avatarUrl: file ? (onDeploy ? file.location : file.path) : avatarUrl,
+      name,
+      email,
+    },
     { new: true }
   );
   req.session.user = updatedUser;

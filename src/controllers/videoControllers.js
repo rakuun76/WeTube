@@ -1,6 +1,7 @@
 import Video from "../models/Video";
 import User from "../models/User";
 import Comment from "../models/Comment";
+import onDeploy from "../ondeploy";
 
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort("-createdAt").populate("owner");
@@ -22,8 +23,10 @@ export const postUpload = async (req, res) => {
 
   try {
     const newVideo = await Video.create({
-      videoUrl: video[0].path,
-      thumbnailUrl: thumbnail[0].path.replace(/[\\]/g, "/"),
+      videoUrl: onDeploy ? video[0].location : video[0].path,
+      thumbnailUrl: onDeploy
+        ? thumbnail[0].location
+        : thumbnail[0].path.replace(/[\\]/g, "/"),
       title,
       owner: _id,
       description,

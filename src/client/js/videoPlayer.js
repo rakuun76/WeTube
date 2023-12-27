@@ -13,6 +13,7 @@ const fullscreenBtn = document.getElementById("fullscreenBtn");
 const fullscreenBtnIcon = fullscreenBtn.querySelector("i");
 
 let volume = 1;
+let timeformat_w = 0;
 let hideTimeoutId = null;
 
 const hideVideoControls = () => videoControls.classList.remove("showing");
@@ -39,10 +40,24 @@ const handleMouseleave = () => {
   hideVideoControls();
 };
 
-const formatTime = (seconds) =>
-  new Date(seconds * 1000).toISOString().substring(15, 19);
+//time format을 위한 가중치 결정
+const setWeight = (duration) => {
+  if (duration < 600) {
+    timeformat_w = 4;
+  } else if (duration < 3600) {
+    timeformat_w = 3;
+  } else if (duration < 36000) {
+    timeformat_w = 1;
+  } else {
+    timeformat_w = 0;
+  }
+};
 
-const handleCanplay = () => {
+const formatTime = (seconds) =>
+  new Date(seconds * 1000).toISOString().slice(11 + timeformat_w, 19);
+
+const handleLoadedMetadata = () => {
+  setWeight(video.duration);
   currentTime.innerText = formatTime(0);
   totalTime.innerText = formatTime(Math.floor(video.duration));
   timeline.max = Math.floor(video.duration * 10) / 10;
@@ -191,7 +206,7 @@ const handleKeydown = (event) => {
 
 videoContainer.addEventListener("mousemove", handleMousemove);
 videoContainer.addEventListener("mouseleave", handleMouseleave);
-video.addEventListener("canplay", handleCanplay);
+video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("click", handleVideoClick);
 video.addEventListener("play", handleVideoPlay);

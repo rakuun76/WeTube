@@ -56,7 +56,7 @@ const setWeight = (duration) => {
 const formatTime = (seconds) =>
   new Date(seconds * 1000).toISOString().slice(11 + timeformat_w, 19);
 
-const handleLoadeddata = () => {
+const handleCanplay = () => {
   setWeight(video.duration);
   currentTime.innerText = formatTime(0);
   totalTime.innerText = formatTime(Math.floor(video.duration));
@@ -206,7 +206,7 @@ const handleKeydown = (event) => {
 
 videoContainer.addEventListener("mousemove", handleMousemove);
 videoContainer.addEventListener("mouseleave", handleMouseleave);
-video.addEventListener("loadeddata", handleLoadeddata);
+video.addEventListener("canplay", handleCanplay);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("click", handleVideoClick);
 video.addEventListener("play", handleVideoPlay);

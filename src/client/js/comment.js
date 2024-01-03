@@ -15,12 +15,12 @@ const addComment = (text, id, owner) => {
 
   comment.dataset.id = id;
   avatar.href = `/users/${owner._id}`;
-  avatarImg.src = owner.avatarUrl || "/uploads/chiikawa.png";
   if (owner.avatarUrl) {
     avatarImg.src =
       owner.avatarUrl[0] === "h" ? `${owner.avatarUrl}` : `/${owner.avatarUrl}`;
   } else {
-    avatarImg.src = "/uploads/chiikawa.png";
+    avatarImg.src =
+      "https://rakuun76-wetube.s3.ap-southeast-2.amazonaws.com/avatars/chiikawa";
   }
   avatar.appendChild(avatarImg);
   name.innerText = owner.name;

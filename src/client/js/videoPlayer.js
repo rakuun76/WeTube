@@ -204,6 +204,10 @@ const handleKeydown = (event) => {
   }
 };
 
+if (video.readyState >= 2) {
+  handleLoadedMetadata();
+}
+
 videoContainer.addEventListener("mousemove", handleMousemove);
 videoContainer.addEventListener("mouseleave", handleMouseleave);
 video.addEventListener("loadedmetadata", handleLoadedMetadata);

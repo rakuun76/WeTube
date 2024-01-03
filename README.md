@@ -2,6 +2,10 @@
 
 NodeJS, Express, MongoDB, ES6를 이용한 유튜브 클론코딩
 
+### 🚀 배포
+
+https://rakuun76-wetube.onrender.com
+
 ## 📌 주요 기능
 
 #### 회원가입
